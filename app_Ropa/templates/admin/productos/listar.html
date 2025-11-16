@@ -1,0 +1,120 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}Gestión de Productos - Panel Administrador{% endblock %}
+{% block page_title %}Gestión de Productos{% endblock %}
+
+{% block content %}
+<div class="content-box">
+    <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 30px;">
+        <h3 style="color: #3B060A;">Lista de Productos</h3>
+        <a href="{% url 'crear_producto' %}" class="btn btn-primary">➕ Nuevo Producto</a>
+    </div>
+
+    <!-- Filtros -->
+    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+        <form method="get" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+            <div class="form-group">
+                <label>Categoría:</label>
+                <select name="categoria" class="form-control" onchange="this.form.submit()">
+                    <option value="">Todas las categorías</option>
+                    {% for categoria in categorias %}
+                    <option value="{{ categoria.id }}" {% if request.GET.categoria == categoria.id|stringformat:"i" %}selected{% endif %}>
+                        {{ categoria.nombre }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Tipo:</label>
+                <select name="tipo" class="form-control" onchange="this.form.submit()">
+                    <option value="">Todos los tipos</option>
+                    {% for tipo in TIPOS %}
+                    <option value="{{ tipo }}" {% if request.GET.tipo == tipo %}selected{% endif %}>
+                        {{ tipo|title }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Buscar:</label>
+                <input type="text" name="search" class="form-control" placeholder="Nombre o descripción..." value="{{ request.GET.search }}">
+            </div>
+            <div class="form-group" style="display: flex; align-items: end;">
+                <button type="submit" class="btn btn-primary">🔍 Filtrar</button>
+                <a href="{% url 'admin_productos' %}" class="btn" style="margin-left: 10px; background: #6c757d; color: white;">🔄 Limpiar</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Tabla de productos -->
+    <div class="table-container">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Nombre</th>
+                    <th>Categoría</th>
+                    <th>Tipo</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Destacado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos %}
+                <tr>
+                    <td>
+                        {% if producto.imagen %}
+                        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                        {% else %}
+                        <div style="width: 50px; height: 50px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border-radius: 5px; color: #6c757d;">
+                            🖼️
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <strong>{{ producto.nombre }}</strong><br>
+                        <small style="color: #6c757d;">{{ producto.descripcion|truncatewords:5 }}</small>
+                    </td>
+                    <td>{{ producto.categoria.nombre }}</td>
+                    <td>
+                        <span class="badge badge-info">{{ producto.tipo|title }}</span>
+                    </td>
+                    <td>${{ producto.precio }}</td>
+                    <td>
+                        <span class="badge {% if producto.stock <= 5 %}badge-danger{% elif producto.stock <= 15 %}badge-warning{% else %}badge-success{% endif %}">
+                            {{ producto.stock }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if producto.destacado %}
+                        <span class="badge badge-success">⭐ Sí</span>
+                        {% else %}
+                        <span class="badge">No</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="{% url 'editar_producto' producto.id %}" class="btn btn-warning btn-sm">✏️</a>
+                            <a href="{% url 'eliminar_producto' producto.id %}" class="btn btn-danger btn-sm">🗑️</a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" style="text-align: center; padding: 40px;">
+                        No se encontraron productos
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Contador -->
+    <div style="margin-top: 20px; color: #6c757d; font-size: 0.9em;">
+        Mostrando {{ productos|length }} producto(s)
+    </div>
+</div>
+{% endblock %}

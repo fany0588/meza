@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favoritos - Cathleen Tink</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #ECEBE0;
+            color: #090706;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #3B060A;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(59, 6, 10, 0.1);
+        }
+        .empty-state h2 {
+            color: #3B060A;
+            margin-bottom: 15px;
+        }
+        .btn-primary {
+            background: #8C2F39;
+            color: #ECEBE0;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>❤️ Mis Favoritos</h1>
+        <div class="empty-state">
+            <h2>Tu lista de favoritos está vacía</h2>
+            <p>Agrega productos a tus favoritos para verlos aquí.</p>
+            <a href="{% url 'mujer' %}" class="btn-primary">Explorar Productos</a>
+        </div>
+    </div>
+</body>
+</html>

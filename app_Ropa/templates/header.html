@@ -1,0 +1,12 @@
+{% load static %}
+
+<header class="top-header">
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+    <div class="logo">
+        <img src="{% static 'img/logo.png' %}" alt="logo">
+        <h1>FamFashion</h1>
+    </div>
+    <div class="login">
+        <a href="{% url 'inicio_sesion' %}" class="btn-login">Iniciar Sesión</a>
+    </div>
+</header>

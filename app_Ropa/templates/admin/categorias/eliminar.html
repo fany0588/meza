@@ -1,0 +1,36 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}Eliminar Categoría - Panel Administrador{% endblock %}
+{% block page_title %}Eliminar Categoría{% endblock %}
+
+{% block content %}
+<div class="content-box" style="text-align: center; max-width: 500px; margin: 0 auto;">
+    <div style="font-size: 4em; margin-bottom: 20px;">⚠️</div>
+    <h3 style="color: #3B060A; margin-bottom: 20px;">¿Estás seguro de que quieres eliminar esta categoría?</h3>
+    
+    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 30px;">
+        <h4>{{ categoria.nombre }}</h4>
+        {% if categoria.descripcion %}
+        <p style="color: #6c757d; margin: 10px 0;">{{ categoria.descripcion }}</p>
+        {% endif %}
+        <div style="margin-top: 15px;">
+            <span class="badge badge-info">{{ categoria.producto_set.count }} productos</span>
+        </div>
+    </div>
+
+    {% if categoria.producto_set.exists %}
+    <div style="margin-bottom: 20px; padding: 15px; background: #f8d7da; border-radius: 8px; color: #721c24;">
+        <strong>❌ No se puede eliminar:</strong> Esta categoría tiene {{ categoria.producto_set.count }} producto(s) asociado(s).
+    </div>
+    <a href="{% url 'admin_categorias' %}" class="btn" style="background: #6c757d; color: white;">↩️ Volver</a>
+    {% else %}
+    <form method="post">
+        {% csrf_token %}
+        <div style="display: flex; gap: 15px; justify-content: center;">
+            <button type="submit" class="btn btn-danger">🗑️ Sí, eliminar categoría</button>
+            <a href="{% url 'admin_categorias' %}" class="btn" style="background: #6c757d; color: white;">↩️ Cancelar</a>
+        </div>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}

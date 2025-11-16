@@ -1,0 +1,99 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}Gestión de Reseñas - Panel Administrador{% endblock %}
+{% block page_title %}Gestión de Reseñas{% endblock %}
+
+{% block content %}
+<div class="content-box">
+    <!-- Filtros -->
+    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+        <form method="get" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+            <div class="form-group">
+                <label>Estado:</label>
+                <select name="aprobado" class="form-control" onchange="this.form.submit()">
+                    <option value="">Todas las reseñas</option>
+                    <option value="true" {% if request.GET.aprobado == 'true' %}selected{% endif %}>Aprobadas</option>
+                    <option value="false" {% if request.GET.aprobado == 'false' %}selected{% endif %}>Pendientes</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Calificación:</label>
+                <select name="calificacion" class="form-control" onchange="this.form.submit()">
+                    <option value="">Todas las calificaciones</option>
+                    {% for i in "12345" %}
+                    <option value="{{ i }}" {% if request.GET.calificacion == i %}selected{% endif %}>
+                        {{ i }} estrella{{ i|pluralize }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group" style="display: flex; align-items: end;">
+                <button type="submit" class="btn btn-primary">🔍 Filtrar</button>
+                <a href="{% url 'admin_resenas' %}" class="btn" style="margin-left: 10px; background: #6c757d; color: white;">🔄 Limpiar</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Tabla de reseñas -->
+    <div class="table-container">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Producto</th>
+                    <th>Calificación</th>
+                    <th>Comentario</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for resena in reseñas %}
+                <tr>
+                    <td>
+                        <strong>{{ resena.cliente.nombre }}</strong><br>
+                        <small style="color: #6c757d;">{{ resena.cliente.email }}</small>
+                    </td>
+                    <td>{{ resena.producto.nombre }}</td>
+                    <td>
+                        <div style="color: #ffc107; font-size: 1.1em;">
+                            {% for i in "12345" %}
+                            {% if forloop.counter <= resena.calificacion %}⭐{% else %}☆{% endif %}
+                            {% endfor %}
+                        </div>
+                    </td>
+                    <td>
+                        <div style="max-width: 200px;">
+                            {{ resena.comentario|truncatewords:10 }}
+                        </div>
+                    </td>
+                    <td>{{ resena.fecha_creacion|date:"d/m/Y" }}</td>
+                    <td>
+                        {% if resena.aprobado %}
+                        <span class="badge badge-success">✅ Aprobada</span>
+                        {% else %}
+                        <span class="badge badge-warning">⏳ Pendiente</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            {% if not resena.aprobado %}
+                            <a href="{% url 'aprobar_resena' resena.id %}" class="btn btn-success btn-sm">✅ Aprobar</a>
+                            {% endif %}
+                            <a href="{% url 'eliminar_resena_admin' resena.id %}" class="btn btn-danger btn-sm">🗑️</a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 40px;">
+                        No se encontraron reseñas
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

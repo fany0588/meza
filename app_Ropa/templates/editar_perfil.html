@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Editar Perfil | FamFashion{% endblock %}
+
+{% block content %}
+<section class="form-section">
+    <div class="form-container">
+        <h2>Editar Mis Datos</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <label>Nombre</label>
+            <input type="text" name="nombre" value="{{ cliente.nombre }}" required>
+
+            <label>Apellido</label>
+            <input type="text" name="apellido" value="{{ cliente.apellido }}" required>
+
+            <label>Teléfono</label>
+            <input type="text" name="telefono" value="{{ cliente.telefono }}" required>
+
+            <label>Calle</label>
+            <input type="text" name="calle" value="{{ cliente.calle }}" required>
+
+            <label>Colonia</label>
+            <input type="text" name="colonia" value="{{ cliente.colonia }}" required>
+
+            <label>Ciudad</label>
+            <input type="text" name="ciudad" value="{{ cliente.ciudad }}" required>
+
+            <label>Código Postal</label>
+            <input type="text" name="codigo_postal" value="{{ cliente.codigo_postal }}" required>
+
+            <label>Método de pago</label>
+            <select name="metodo_pago">
+                <option value="{{ cliente.metodo_pago }}">{{ cliente.metodo_pago }}</option>
+                <option value="Tarjeta">Tarjeta</option>
+                <option value="Efectivo">Efectivo</option>
+                <option value="Transferencia">Transferencia</option>
+            </select>
+
+            <button type="submit" class="btn-comprar">Guardar Cambios</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

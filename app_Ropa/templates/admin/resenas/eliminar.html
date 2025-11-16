@@ -1,0 +1,35 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}Eliminar Reseña - Panel Administrador{% endblock %}
+{% block page_title %}Eliminar Reseña{% endblock %}
+
+{% block content %}
+<div class="content-box" style="text-align: center; max-width: 500px; margin: 0 auto;">
+    <div style="font-size: 4em; margin-bottom: 20px;">⚠️</div>
+    <h3 style="color: #3B060A; margin-bottom: 20px;">¿Estás seguro de que quieres eliminar esta reseña?</h3>
+    
+    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 30px;">
+        <h4>Reseña de {{ resena.cliente.nombre }}</h4>
+        <p style="color: #6c757d; margin: 10px 0;">Para: {{ resena.producto.nombre }}</p>
+        <div style="color: #ffc107; margin: 10px 0;">
+            {% for i in "12345" %}
+            {% if forloop.counter <= resena.calificacion %}⭐{% else %}☆{% endif %}
+            {% endfor %}
+        </div>
+        <p style="font-style: italic; margin: 15px 0;">"{{ resena.comentario }}"</p>
+        <div style="margin-top: 15px;">
+            <span class="badge {% if resena.aprobado %}badge-success{% else %}badge-warning{% endif %}">
+                {% if resena.aprobado %}Aprobada{% else %}Pendiente{% endif %}
+            </span>
+        </div>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <div style="display: flex; gap: 15px; justify-content: center;">
+            <button type="submit" class="btn btn-danger">🗑️ Sí, eliminar reseña</button>
+            <a href="{% url 'admin_resenas' %}" class="btn" style="background: #6c757d; color: white;">↩️ Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

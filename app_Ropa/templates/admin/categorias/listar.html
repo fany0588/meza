@@ -1,0 +1,56 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}Gestión de Categorías - Panel Administrador{% endblock %}
+{% block page_title %}Gestión de Categorías{% endblock %}
+
+{% block content %}
+<div class="content-box">
+    <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 30px;">
+        <h3 style="color: #3B060A;">Lista de Categorías</h3>
+        <a href="{% url 'crear_categoria' %}" class="btn btn-primary">➕ Nueva Categoría</a>
+    </div>
+
+    <div class="table-container">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Total Productos</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for categoria in categorias %}
+                <tr>
+                    <td>
+                        <strong>{{ categoria.nombre }}</strong>
+                    </td>
+                    <td>
+                        {% if categoria.descripcion %}
+                        {{ categoria.descripcion|truncatewords:10 }}
+                        {% else %}
+                        <span style="color: #6c757d;">Sin descripción</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="badge badge-info">{{ categoria.total_productos }}</span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="{% url 'eliminar_categoria' categoria.id %}" class="btn btn-danger btn-sm">🗑️</a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="text-align: center; padding: 40px;">
+                        No hay categorías registradas
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

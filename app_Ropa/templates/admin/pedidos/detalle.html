@@ -1,0 +1,88 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}Detalle Pedido #{{ pedido.id }} - Panel Administrador{% endblock %}
+{% block page_title %}Detalle del Pedido #{{ pedido.id }}{% endblock %}
+
+{% block content %}
+<div class="content-box">
+    <!-- Información del pedido -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+        <div>
+            <h4 style="color: #3B060A; margin-bottom: 15px;">📦 Información del Pedido</h4>
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
+                <p><strong>ID:</strong> #{{ pedido.id }}</p>
+                <p><strong>Fecha:</strong> {{ pedido.fecha_pedido|date:"d/m/Y H:i" }}</p>
+                <p><strong>Total:</strong> ${{ pedido.total }}</p>
+                <p><strong>Estado actual:</strong> 
+                    <span class="badge 
+                        {% if pedido.estado == 'entregado' %}badge-success
+                        {% elif pedido.estado == 'pendiente' %}badge-warning
+                        {% elif pedido.estado == 'cancelado' %}badge-danger
+                        {% else %}badge-info{% endif %}">
+                        {{ pedido.estado|title }}
+                    </span>
+                </p>
+            </div>
+        </div>
+
+        <div>
+            <h4 style="color: #3B060A; margin-bottom: 15px;">👤 Información del Cliente</h4>
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
+                <p><strong>Nombre:</strong> {{ pedido.cliente.nombre }} {{ pedido.cliente.apellido }}</p>
+                <p><strong>Email:</strong> {{ pedido.cliente.email }}</p>
+                <p><strong>Teléfono:</strong> {{ pedido.cliente.telefono }}</p>
+                <p><strong>Dirección:</strong> {{ pedido.direccion_envio }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cambiar estado -->
+    <div style="background: #e9ecef; padding: 20px; border-radius: 10px; margin-bottom: 30px;">
+        <h4 style="color: #3B060A; margin-bottom: 15px;">🔄 Cambiar Estado del Pedido</h4>
+        <form method="post" style="display: flex; gap: 15px; align-items: center;">
+            {% csrf_token %}
+            <select name="estado" class="form-control" style="width: auto;">
+                {% for estado_val, estado_label in ESTADOS %}
+                <option value="{{ estado_val }}" {% if pedido.estado == estado_val %}selected{% endif %}>
+                    {{ estado_label }}
+                </option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-primary">💾 Actualizar Estado</button>
+        </form>
+    </div>
+
+    <!-- Items del pedido -->
+    <h4 style="color: #3B060A; margin-bottom: 15px;">🛍️ Productos del Pedido</h4>
+    <div class="table-container">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.producto.nombre }}</td>
+                    <td>{{ item.cantidad }}</td>
+                    <td>${{ item.precio }}</td>
+                    <td>${{ item.subtotal }}</td>
+                </tr>
+                {% endfor %}
+                <tr style="background: #f8f9fa; font-weight: bold;">
+                    <td colspan="3" style="text-align: right;">Total:</td>
+                    <td>${{ pedido.total }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div style="margin-top: 30px; text-align: center;">
+        <a href="{% url 'admin_pedidos' %}" class="btn" style="background: #6c757d; color: white;">↩️ Volver a Pedidos</a>
+    </div>
+</div>
+{% endblock %}

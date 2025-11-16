@@ -1,0 +1,33 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}Eliminar Producto - Panel Administrador{% endblock %}
+{% block page_title %}Eliminar Producto{% endblock %}
+
+{% block content %}
+<div class="content-box" style="text-align: center; max-width: 500px; margin: 0 auto;">
+    <div style="font-size: 4em; margin-bottom: 20px;">⚠️</div>
+    <h3 style="color: #3B060A; margin-bottom: 20px;">¿Estás seguro de que quieres eliminar este producto?</h3>
+    
+    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 30px;">
+        <h4>{{ producto.nombre }}</h4>
+        <p style="color: #6c757d; margin: 10px 0;">{{ producto.descripcion|truncatewords:10 }}</p>
+        <div style="display: flex; justify-content: center; gap: 15px; margin-top: 15px;">
+            <span class="badge badge-info">{{ producto.categoria.nombre }}</span>
+            <span class="badge">{{ producto.tipo|title }}</span>
+            <span class="badge">${{ producto.precio }}</span>
+        </div>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <div style="display: flex; gap: 15px; justify-content: center;">
+            <button type="submit" class="btn btn-danger">🗑️ Sí, eliminar producto</button>
+            <a href="{% url 'admin_productos' %}" class="btn" style="background: #6c757d; color: white;">↩️ Cancelar</a>
+        </div>
+    </form>
+
+    <div style="margin-top: 30px; padding: 15px; background: #fff3cd; border-radius: 8px; color: #856404;">
+        <strong>⚠️ Advertencia:</strong> Esta acción no se puede deshacer. El producto será eliminado permanentemente.
+    </div>
+</div>
+{% endblock %}

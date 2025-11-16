@@ -1,0 +1,127 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}Detalle Cliente - Panel Administrador{% endblock %}
+{% block page_title %}Detalle del Cliente: {{ cliente.nombre }} {{ cliente.apellido }}{% endblock %}
+
+{% block content %}
+<div class="content-box">
+    <!-- Información del cliente -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+        <div>
+            <h4 style="color: #3B060A; margin-bottom: 15px;">👤 Información Personal</h4>
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
+                <p><strong>Nombre completo:</strong> {{ cliente.nombre }} {{ cliente.apellido }}</p>
+                <p><strong>Email:</strong> {{ cliente.email }}</p>
+                <p><strong>Teléfono:</strong> {{ cliente.telefono }}</p>
+                <p><strong>Fecha de registro:</strong> {{ cliente.fecha_registro|date:"d/m/Y H:i" }}</p>
+                <p><strong>Método de pago preferido:</strong> {{ cliente.metodo_pago }}</p>
+            </div>
+        </div>
+
+        <div>
+            <h4 style="color: #3B060A; margin-bottom: 15px;">🏠 Dirección</h4>
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
+                <p><strong>Calle:</strong> {{ cliente.calle }} #{{ cliente.numero_casa }}</p>
+                <p><strong>Colonia:</strong> {{ cliente.colonia }}</p>
+                <p><strong>Ciudad:</strong> {{ cliente.ciudad }}</p>
+                <p><strong>Código Postal:</strong> {{ cliente.codigo_postal }}</p>
+                {% if cliente.descripcion_direccion %}
+                <p><strong>Descripción adicional:</strong> {{ cliente.descripcion_direccion }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Historial de pedidos -->
+    <h4 style="color: #3B060A; margin-bottom: 15px;">📦 Historial de Pedidos ({{ pedidos|length }})</h4>
+    {% if pedidos %}
+    <div class="table-container">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>ID Pedido</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pedido in pedidos %}
+                <tr>
+                    <td>#{{ pedido.id }}</td>
+                    <td>{{ pedido.fecha_pedido|date:"d/m/Y H:i" }}</td>
+                    <td>${{ pedido.total }}</td>
+                    <td>
+                        <span class="badge 
+                            {% if pedido.estado == 'entregado' %}badge-success
+                            {% elif pedido.estado == 'pendiente' %}badge-warning
+                            {% elif pedido.estado == 'cancelado' %}badge-danger
+                            {% else %}badge-info{% endif %}">
+                            {{ pedido.estado|title }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{% url 'detalle_pedido' pedido.id %}" class="btn btn-primary btn-sm">👁️ Ver</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 40px; background: #f8f9fa; border-radius: 10px;">
+        <p style="color: #6c757d;">Este cliente no ha realizado pedidos aún.</p>
+    </div>
+    {% endif %}
+
+    <!-- Reseñas del cliente -->
+    <h4 style="color: #3B060A; margin-bottom: 15px; margin-top: 30px;">⭐ Reseñas Realizadas ({{ reseñas|length }})</h4>
+    {% if reseñas %}
+    <div class="table-container">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Calificación</th>
+                    <th>Comentario</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for resena in reseñas %}
+                <tr>
+                    <td>{{ resena.producto.nombre }}</td>
+                    <td>
+                        <div style="color: #ffc107;">
+                            {% for i in "12345" %}
+                            {% if forloop.counter <= resena.calificacion %}⭐{% else %}☆{% endif %}
+                            {% endfor %}
+                        </div>
+                    </td>
+                    <td>{{ resena.comentario|truncatewords:8 }}</td>
+                    <td>{{ resena.fecha_creacion|date:"d/m/Y" }}</td>
+                    <td>
+                        {% if resena.aprobado %}
+                        <span class="badge badge-success">✅ Aprobada</span>
+                        {% else %}
+                        <span class="badge badge-warning">⏳ Pendiente</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 40px; background: #f8f9fa; border-radius: 10px;">
+        <p style="color: #6c757d;">Este cliente no ha realizado reseñas aún.</p>
+    </div>
+    {% endif %}
+
+    <div style="margin-top: 30px; text-align: center;">
+        <a href="{% url 'admin_clientes' %}" class="btn" style="background: #6c757d; color: white;">↩️ Volver a Clientes</a>
+    </div>
+</div>
+{% endblock %}

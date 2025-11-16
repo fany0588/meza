@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Panel Administrador - Cathleen Tink{% endblock %}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, #3B060A 0%, #2A0407 100%);
+            color: #ECEBE0;
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .admin-logo {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(236, 235, 224, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .admin-logo h1 {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #ECEBE0;
+        }
+
+        .admin-logo .subtitle {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        .nav-section {
+            margin-bottom: 30px;
+        }
+
+        .nav-section h3 {
+            font-size: 0.9em;
+            text-transform: uppercase;
+            color: #8C2F39;
+            padding: 0 25px;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-bottom: 5px;
+        }
+
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            padding: 12px 25px;
+            color: #ECEBE0;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: rgba(140, 47, 57, 0.2);
+            border-left-color: #8C2F39;
+            color: #8C2F39;
+        }
+
+        .nav-links i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        .admin-header {
+            background: #fff;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(59, 6, 10, 0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+
+        .admin-header h2 {
+            color: #3B060A;
+            font-size: 1.8em;
+            font-weight: 600;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-logout {
+            background: #8C2F39;
+            color: #ECEBE0;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background: #73232C;
+            transform: translateY(-2px);
+        }
+
+        /* Content Box */
+        .content-box {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(59, 6, 10, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #3B060A 0%, #2A0407 100%);
+            color: #ECEBE0;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .admin-table th,
+        .admin-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .admin-table th {
+            background: #f8f9fa;
+            color: #3B060A;
+            font-weight: 600;
+            border-bottom: 2px solid #8C2F39;
+        }
+
+        .admin-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .btn-primary {
+            background: #8C2F39;
+            color: #ECEBE0;
+        }
+
+        .btn-primary:hover {
+            background: #73232C;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8em;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #3B060A;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #8C2F39;
+            box-shadow: 0 0 0 3px rgba(140, 47, 57, 0.1);
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Badges */
+        .badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .badge-success { background: #d4edda; color: #155724; }
+        .badge-warning { background: #fff3cd; color: #856404; }
+        .badge-danger { background: #f8d7da; color: #721c24; }
+        .badge-info { background: #d1ecf1; color: #0c5460; }
+
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="admin-logo">
+                <h1>CATHLEEN TINK</h1>
+                <div class="subtitle">PANEL ADMINISTRADOR</div>
+            </div>
+
+            <div class="nav-section">
+                <h3>Principal</h3>
+                <ul class="nav-links">
+                    <li><a href="{% url 'panel_admin' %}" class="{% if request.resolver_match.url_name == 'panel_admin' %}active{% endif %}">
+                        📊 Dashboard
+                    </a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <h3>Gestión</h3>
+                <ul class="nav-links">
+                    <li><a href="{% url 'admin_productos' %}" class="{% if 'productos' in request.resolver_match.url_name %}active{% endif %}">
+                        🛍️ Productos
+                    </a></li>
+                    <li><a href="{% url 'admin_categorias' %}" class="{% if 'categorias' in request.resolver_match.url_name %}active{% endif %}">
+                        📁 Categorías
+                    </a></li>
+                    <li><a href="{% url 'admin_pedidos' %}" class="{% if 'pedidos' in request.resolver_match.url_name %}active{% endif %}">
+                        📦 Pedidos
+                    </a></li>
+                    <li><a href="{% url 'admin_clientes' %}" class="{% if 'clientes' in request.resolver_match.url_name %}active{% endif %}">
+                        👥 Clientes
+                    </a></li>
+                    <li><a href="{% url 'admin_resenas' %}" class="{% if 'resenas' in request.resolver_match.url_name %}active{% endif %}">
+                        ⭐ Reseñas
+                    </a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="admin-header">
+                <h2>{% block page_title %}Panel Administrador{% endblock %}</h2>
+                <!-- En la sección del user-menu -->
+                <div class="user-menu">
+                    <span>Hola, {{ user.username }}</span>
+                    <a href="{% url 'admin:logout' %}" class="btn-logout">🚪 Cerrar Sesión</a>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-error{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Content -->
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>

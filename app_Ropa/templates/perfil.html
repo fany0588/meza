@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Mi Perfil | FamFashion{% endblock %}
+
+{% block content %}
+<section class="perfil">
+    <div class="perfil-header">
+        <h2>Bienvenido, {{ cliente.nombre }}</h2>
+        <a href="{% url 'editar_perfil' %}" class="btn-comprar">Editar Perfil</a>
+        <a href="{% url 'cerrar_sesion' %}" class="btn-eliminar">Cerrar Sesión</a>
+    </div>
+
+    <div class="perfil-datos">
+        <h3>Información Personal</h3>
+        <ul>
+            <li><strong>Correo:</strong> {{ cliente.email }}</li>
+            <li><strong>Teléfono:</strong> {{ cliente.telefono }}</li>
+            <li><strong>Dirección:</strong> {{ cliente.calle }} #{{ cliente.numero_casa }}, {{ cliente.colonia }}, {{ cliente.ciudad }}</li>
+            <li><strong>Método de pago:</strong> {{ cliente.metodo_pago }}</li>
+        </ul>
+    </div>
+
+    <div class="perfil-pedidos">
+        <h3>Mis Pedidos</h3>
+        {% if pedidos %}
+        <table class="tabla-carrito">
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Total</th>
+                <th>Estado</th>
+            </tr>
+            {% for p in pedidos %}
+            <tr>
+                <td>{{ p.nombre_producto }}</td>
+                <td>{{ p.cantidad }}</td>
+                <td>${{ p.total }}</td>
+                <td>{{ p.estado }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <p>No tienes pedidos aún.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

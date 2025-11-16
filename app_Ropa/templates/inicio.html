@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}Inicio | FamFashion{% endblock %}
+{% load static %}
+{% block content %}
+<section class="inicio">
+    <div class="promo-container">
+        <div class="promo-text">
+            <h2>Descubre la nueva colección<br> Otoño / Invierno</h2>
+            <p>Moda elegante, cómoda y sostenible. ¡Explora nuestras categorías!</p>
+            <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+            <a href="{% url 'mujer' %}" class="btn-explorar">Explorar</a>
+        </div>
+        <div class="promo-image">
+            <img src="{% static 'img/ropa_portada.png' %}" alt="Moda Otoño Invierno">
+        </div>
+    </div>
+
+    <div class="destacados">
+        <h3>Productos Destacados</h3>
+        <div class="productos-grid">
+            {% for producto in productos_destacados %}
+            <div class="card">
+                {% if producto.imagen %}
+                <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                {% else %}
+                <img src="{% static 'img/placeholder.jpg' %}" alt="{{ producto.nombre }}">
+                {% endif %}
+                <div class="card-content">
+                    <h4>{{ producto.nombre }}</h4>
+                    <p>{{ producto.descripcion|truncatewords:10 }}</p>
+                    <div class="precio">
+                        {% if producto.precio_original and producto.precio_original > producto.precio %}
+                        <span class="precio-original">${{ producto.precio_original }}</span>
+                        {% endif %}
+                        <span class="precio-actual">${{ producto.precio }}</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn-comprar">🛒 Agregar</button>
+                        <button class="btn-favorito">❤️</button>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <!-- Si no hay productos destacados, muestra las categorías -->
+            <div class="card">
+                <a href="{% url 'mujer' %}">
+                    <img src="{% static 'img/mujeres1.png' %}" alt="Moda Mujer">
+                    <div class="card-content">
+                        <h4>Moda Mujer</h4>
+                        <p>Estilo y elegancia para cada ocasión.</p>
+                    </div>
+                </a>
+            </div>
+            <div class="card">
+                <a href="{% url 'hombre' %}">
+                    <img src="{% static 'img/hombres1.png' %}" alt="Moda Hombre">
+                    <div class="card-content">
+                        <h4>Moda Hombre</h4>
+                        <p>Confort y tendencia en cada prenda.</p>
+                    </div>
+                </a>
+            </div>
+            <div class="card">
+                <a href="{% url 'ninas' %}">
+                    <img src="{% static 'img/ninas1.png' %}" alt="Moda Niñas">
+                    <div class="card-content">
+                        <h4>Moda Niñas</h4>
+                        <p>Colores, energía y diversión.</p>
+                    </div>
+                </a>
+            </div>
+            <div class="card">
+                <a href="{% url 'ninos' %}">
+                    <img src="{% static 'img/ninos1.png' %}" alt="Moda Niños">
+                    <div class="card-content">
+                        <h4>Moda Niños</h4>
+                        <p>Comodidad para acompañar su día.</p>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

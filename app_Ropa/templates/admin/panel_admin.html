@@ -1,0 +1,105 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}Dashboard - Panel Administrador{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-number">{{ total_productos }}</div>
+        <div class="stat-label">Total Productos</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ total_clientes }}</div>
+        <div class="stat-label">Clientes Registrados</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ total_pedidos }}</div>
+        <div class="stat-label">Total Pedidos</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">${{ ventas_mes }}</div>
+        <div class="stat-label">Ventas del Mes</div>
+    </div>
+</div>
+
+<div class="content-box">
+    <h3 style="color: #3B060A; margin-bottom: 20px;">📦 Pedidos Recientes</h3>
+    <div class="table-container">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pedido in pedidos_recientes %}
+                <tr>
+                    <td>#{{ pedido.id }}</td>
+                    <td>{{ pedido.cliente.nombre }} {{ pedido.cliente.apellido }}</td>
+                    <td>{{ pedido.fecha_pedido|date:"d/m/Y" }}</td>
+                    <td>${{ pedido.total }}</td>
+                    <td>
+                        <span class="badge 
+                            {% if pedido.estado == 'entregado' %}badge-success
+                            {% elif pedido.estado == 'pendiente' %}badge-warning
+                            {% elif pedido.estado == 'cancelado' %}badge-danger
+                            {% else %}badge-info{% endif %}">
+                            {{ pedido.estado|title }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{% url 'detalle_pedido' pedido.id %}" class="btn btn-primary btn-sm">👁️ Ver</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center;">No hay pedidos recientes</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="content-box">
+    <h3 style="color: #3B060A; margin-bottom: 20px;">⚠️ Productos con Stock Bajo</h3>
+    <div class="table-container">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Categoría</th>
+                    <th>Stock Actual</th>
+                    <th>Precio</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos_bajo_stock %}
+                <tr>
+                    <td>{{ producto.nombre }}</td>
+                    <td>{{ producto.categoria.nombre }}</td>
+                    <td>
+                        <span class="badge badge-danger">{{ producto.stock }} unidades</span>
+                    </td>
+                    <td>${{ producto.precio }}</td>
+                    <td>
+                        <a href="{% url 'editar_producto' producto.id %}" class="btn btn-warning btn-sm">✏️ Editar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="text-align: center;">Todos los productos tienen stock suficiente</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

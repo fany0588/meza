@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Moda Mujer | FamFashion{% endblock %}
+{% load static %}
+{% block content %}
+<section class="categoria">
+    <div class="categoria-header">
+        <h2>Moda Mujer</h2>
+        <p class="intro">Descubre prendas elegantes y modernas diseñadas para cada ocasión.</p>
+    </div>
+
+    <div class="productos-grid">
+        {% for producto in productos %}
+        <div class="card">
+            {% if producto.imagen %}
+            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+            {% else %}
+            <img src="{% static 'img/mujer' %}{{ forloop.counter }}.png" alt="{{ producto.nombre }}">
+            {% endif %}
+            <div class="card-content">
+                <h4>{{ producto.nombre }}</h4>
+                <p>{{ producto.descripcion }}</p>
+                <div class="precio">
+                    {% if producto.precio_original and producto.precio_original > producto.precio %}
+                    <span class="precio-original">${{ producto.precio_original }}</span>
+                    {% endif %}
+                    <span class="precio-actual">${{ producto.precio }}</span>
+                </div>
+                <div class="card-info">
+                    <span class="stock">Stock: {{ producto.stock }}</span>
+                    {% if producto.destacado %}
+                    <span class="destacado-badge">⭐ Destacado</span>
+                    {% endif %}
+                </div>
+                <button class="btn-comprar">🛒 Agregar al carrito</button>
+            </div>
+        </div>
+        {% empty %}
+        <div class="empty-state">
+            <h3>Próximamente en Moda Mujer</h3>
+            <p>Estamos preparando productos increíbles para ti.</p>
+            <p>Mientras tanto, puedes explorar nuestras otras categorías.</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

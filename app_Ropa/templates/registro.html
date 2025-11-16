@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}Registro de Cliente | FamFashion{% endblock %}
+
+{% block content %}
+<section class="form-section">
+    <div class="form-container">
+        <h2>Crear Cuenta</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <label>Nombre</label>
+            <input type="text" name="nombre" required>
+
+            <label>Apellido</label>
+            <input type="text" name="apellido" required>
+
+            <label>Email</label>
+            <input type="email" name="email" required>
+
+            <label>Teléfono</label>
+            <input type="text" name="telefono" required>
+
+            <label>Contraseña</label>
+            <input type="password" name="contraseña" required>
+
+            <label>Calle</label>
+            <input type="text" name="calle" required>
+
+            <label>Número de casa</label>
+            <input type="text" name="numero_casa" required>
+
+            <label>Colonia</label>
+            <input type="text" name="colonia" required>
+
+            <label>Ciudad</label>
+            <input type="text" name="ciudad" required>
+
+            <label>Código postal</label>
+            <input type="text" name="codigo_postal" required>
+
+            <label>Descripción de dirección</label>
+            <textarea name="descripcion_direccion"></textarea>
+
+            <label>Método de pago</label>
+            <select name="metodo_pago">
+                <option value="Tarjeta">Tarjeta</option>
+                <option value="Efectivo">Efectivo</option>
+                <option value="Transferencia">Transferencia</option>
+            </select>
+
+            <button type="submit" class="btn-comprar">Registrarse</button>
+        </form>
+        <p>¿Ya tienes cuenta? <a href="{% url 'inicio_sesion' %}" class="link">Inicia sesión</a></p>
+    </div>
+</section>
+{% endblock %}

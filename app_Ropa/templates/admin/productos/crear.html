@@ -1,0 +1,84 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}Crear Producto - Panel Administrador{% endblock %}
+{% block page_title %}Crear Nuevo Producto{% endblock %}
+
+{% block content %}
+<div class="content-box">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+            <!-- Columna izquierda -->
+            <div>
+                <div class="form-group">
+                    <label for="nombre">Nombre del Producto *</label>
+                    <input type="text" id="nombre" name="nombre" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="descripcion">Descripción *</label>
+                    <textarea id="descripcion" name="descripcion" class="form-control" rows="4" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="categoria">Categoría *</label>
+                    <select id="categoria" name="categoria" class="form-control" required>
+                        <option value="">Seleccionar categoría...</option>
+                        {% for categoria in categorias %}
+                        <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="tipo">Tipo *</label>
+                    <select id="tipo" name="tipo" class="form-control" required>
+                        <option value="">Seleccionar tipo...</option>
+                        {% for tipo in TIPOS %}
+                        <option value="{{ tipo }}">{{ tipo|title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <!-- Columna derecha -->
+            <div>
+                <div class="form-group">
+                    <label for="precio">Precio Actual *</label>
+                    <input type="number" id="precio" name="precio" class="form-control" step="0.01" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="precio_original">Precio Original (opcional)</label>
+                    <input type="number" id="precio_original" name="precio_original" class="form-control" step="0.01" min="0">
+                    <small style="color: #6c757d;">Para mostrar descuentos. Si está vacío, se usará el precio actual.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="stock">Stock *</label>
+                    <input type="number" id="stock" name="stock" class="form-control" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="imagen">Imagen del Producto</label>
+                    <input type="file" id="imagen" name="imagen" class="form-control" accept="image/*">
+                </div>
+
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 10px;">
+                        <input type="checkbox" name="destacado">
+                        <span>Producto Destacado</span>
+                    </label>
+                    <small style="color: #6c757d;">Los productos destacados aparecerán en la sección principal</small>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 15px; margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;">
+            <button type="submit" class="btn btn-primary">💾 Guardar Producto</button>
+            <a href="{% url 'admin_productos' %}" class="btn" style="background: #6c757d; color: white;">↩️ Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

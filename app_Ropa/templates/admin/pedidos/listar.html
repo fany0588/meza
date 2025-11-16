@@ -1,0 +1,84 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}Gestión de Pedidos - Panel Administrador{% endblock %}
+{% block page_title %}Gestión de Pedidos{% endblock %}
+
+{% block content %}
+<div class="content-box">
+    <!-- Filtros -->
+    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+        <form method="get" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+            <div class="form-group">
+                <label>Estado:</label>
+                <select name="estado" class="form-control" onchange="this.form.submit()">
+                    <option value="">Todos los estados</option>
+                    {% for estado_val, estado_label in ESTADOS %}
+                    <option value="{{ estado_val }}" {% if request.GET.estado == estado_val %}selected{% endif %}>
+                        {{ estado_label }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Fecha desde:</label>
+                <input type="date" name="fecha_inicio" class="form-control" value="{{ request.GET.fecha_inicio }}">
+            </div>
+            <div class="form-group">
+                <label>Fecha hasta:</label>
+                <input type="date" name="fecha_fin" class="form-control" value="{{ request.GET.fecha_fin }}">
+            </div>
+            <div class="form-group" style="display: flex; align-items: end;">
+                <button type="submit" class="btn btn-primary">🔍 Filtrar</button>
+                <a href="{% url 'admin_pedidos' %}" class="btn" style="margin-left: 10px; background: #6c757d; color: white;">🔄 Limpiar</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Tabla de pedidos -->
+    <div class="table-container">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pedido in pedidos %}
+                <tr>
+                    <td>#{{ pedido.id }}</td>
+                    <td>
+                        <strong>{{ pedido.cliente.nombre }} {{ pedido.cliente.apellido }}</strong><br>
+                        <small style="color: #6c757d;">{{ pedido.cliente.email }}</small>
+                    </td>
+                    <td>{{ pedido.fecha_pedido|date:"d/m/Y H:i" }}</td>
+                    <td>${{ pedido.total }}</td>
+                    <td>
+                        <span class="badge 
+                            {% if pedido.estado == 'entregado' %}badge-success
+                            {% elif pedido.estado == 'pendiente' %}badge-warning
+                            {% elif pedido.estado == 'cancelado' %}badge-danger
+                            {% else %}badge-info{% endif %}">
+                            {{ pedido.estado|title }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{% url 'detalle_pedido' pedido.id %}" class="btn btn-primary btn-sm">👁️ Detalles</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 40px;">
+                        No se encontraron pedidos
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
